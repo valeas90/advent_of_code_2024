@@ -23,15 +23,9 @@
         #
         included: [
           "lib/",
-          "src/",
-          "test/",
-          "web/",
-          "apps/*/lib/",
-          "apps/*/src/",
-          "apps/*/test/",
-          "apps/*/web/"
+          "test/"
         ],
-        excluded: [~r"/_build/", ~r"/deps/", ~r"/node_modules/"]
+        excluded: [~r"/_build/", ~r"/deps/"]
       },
       #
       # Load and configure plugins here:
@@ -223,8 +217,6 @@
       name: "migrations",
       files: %{
         included: [
-          "priv/repo/",
-          "priv/repo_helpapp/"
         ]
       },
       plugins: [],
