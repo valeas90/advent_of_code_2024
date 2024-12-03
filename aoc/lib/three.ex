@@ -34,7 +34,7 @@ defmodule Three do
     |> Enum.sum()
   end
 
-  @spec create_coords(binary(), [[tuple()], [tuple()], [tuple()], non_neg_integer()]) :: list()
+  @spec create_coords(binary(), list()) :: list()
   defp create_coords(line, [acc_donts, acc_dos, acc_numbers, line_number]) do
     donts =
       ~r/don't\(\)/
