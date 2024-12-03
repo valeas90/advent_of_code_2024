@@ -1,6 +1,6 @@
 defmodule Three do
   @moduledoc """
-  Day two
+  Day three
   """
 
   alias Utils
