@@ -16,15 +16,12 @@ defmodule Three do
   def part_two do
     lines = 3 |> Utils.input!() |> Enum.to_list()
 
-    [donts, dos, numbers, _] =
-      Enum.reduce(lines, [[], [], [], 0], &create_coords(&1, &2))
+    [donts, dos, numbers, _] = Enum.reduce(lines, [[], [], [], 0], &create_coords(&1, &2))
 
-    result =
-      numbers
-      |> Enum.map(
-        &maybe_add_with_instructions(&1, normalize_coords(donts), normalize_coords(dos))
-      )
-      |> Enum.sum()
+    donts = normalize_coords(donts)
+    dos = normalize_coords(dos)
+
+    result = numbers |> Enum.map(&maybe_add_with_instructions(&1, donts, dos)) |> Enum.sum()
 
     IO.puts("Result #{result}")
   end
@@ -37,6 +34,7 @@ defmodule Three do
     |> Enum.sum()
   end
 
+  @spec create_coords(binary(), [[tuple()], [tuple()], [tuple()], non_neg_integer()]) :: list()
   defp create_coords(line, [acc_donts, acc_dos, acc_numbers, line_number]) do
     donts =
       ~r/don't\(\)/
