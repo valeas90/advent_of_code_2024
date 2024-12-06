@@ -13,8 +13,8 @@ defmodule Six do
   def part_one do
     grid = get_grid()
     guard = find_guard(grid)
-    initial_grid = initial_grid(guard)
-    result = next_step(guard, grid, @first_move, initial_grid)
+    initial_visited_grid = get_initial_visited_grid(guard)
+    result = next_step(guard, grid, @first_move, initial_visited_grid)
     IO.puts("Result #{result}")
   end
 
@@ -80,7 +80,7 @@ defmodule Six do
   end
 
   @spec next_step_with_limit(tuple(), map, tuple(), non_neg_integer()) :: atom()
-  defp next_step_with_limit(here, grid, move_vector, 0), do: :trapped
+  defp next_step_with_limit(_here, _grid, _move_vector, 0), do: :trapped
 
   defp next_step_with_limit(here, grid, move_vector, remaining) do
     next = {elem(here, 0) + elem(move_vector, 0), elem(here, 1) + elem(move_vector, 1)}
@@ -108,8 +108,8 @@ defmodule Six do
     end
   end
 
-  @spec initial_grid({non_neg_integer(), non_neg_integer()}) :: map
-  defp initial_grid(guard) do
+  @spec get_initial_visited_grid({non_neg_integer(), non_neg_integer()}) :: map
+  defp get_initial_visited_grid(guard) do
     empty_grid =
       for x <- 0..(@size - 1), y <- 0..(@size - 1), reduce: %{} do
         acc -> Map.put(acc, {x, y}, 0)
