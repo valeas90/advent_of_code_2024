@@ -12,25 +12,23 @@ defmodule Seven do
   @ops_part_two 3
 
   @spec part_one :: :ok
-  def part_one do
-    lines = 7 |> Utils.input!() |> Enum.to_list() |> Enum.map(&parse_line/1)
-
-    for {result, numbers} <- lines, reduce: 0 do
-      acc ->
-        permutations = get_permutations(numbers, @ops_part_one)
-        if valid_line?(result, numbers, permutations), do: acc + result, else: acc
-    end
-  end
+  def part_one, do: run(@ops_part_one)
 
   @spec part_two :: :ok
-  def part_two do
+  def part_two, do: run(@ops_part_two)
+
+  @spec run(non_neg_integer()) :: :ok
+  def run(amount_of_different_operations) do
     lines = 7 |> Utils.input!() |> Enum.to_list() |> Enum.map(&parse_line/1)
 
-    for {result, numbers} <- lines, reduce: 0 do
-      acc ->
-        permutations = get_permutations(numbers, @ops_part_two)
-        if valid_line?(result, numbers, permutations), do: acc + result, else: acc
-    end
+    result =
+      for {end_number, numbers} <- lines, reduce: 0 do
+        acc ->
+          permutations = get_permutations(numbers, amount_of_different_operations)
+          if valid_line?(end_number, numbers, permutations), do: acc + end_number, else: acc
+      end
+
+    IO.puts("Result #{result}")
   end
 
   @spec parse_line(binary()) :: {non_neg_integer(), [non_neg_integer()]}
