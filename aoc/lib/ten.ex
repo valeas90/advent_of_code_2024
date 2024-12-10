@@ -14,6 +14,7 @@ defmodule Ten do
     IO.puts("Results #{results}")
   end
 
+  @spec part_two :: :ok
   def part_two do
     grid = get_grid()
     inits = get_inits(grid)
@@ -23,23 +24,24 @@ defmodule Ten do
   end
 
   @spec get_grid :: map
-  def get_grid do
+  defp get_grid do
     10
     |> Utils.input!()
     |> Enum.with_index()
     |> Enum.reduce(%{}, fn {line, yaxis}, acc ->
       numbers = line |> String.graphemes() |> Enum.with_index()
+
       Enum.reduce(numbers, acc, fn {number, xaxis}, acc ->
-        Map.put(acc, {xaxis, yaxis}, (if number != ".", do: String.to_integer(number), else: nil))
+        Map.put(acc, {xaxis, yaxis}, if(number != ".", do: String.to_integer(number), else: nil))
       end)
     end)
   end
 
   @spec get_inits(map) :: [{non_neg_integer(), non_neg_integer()}]
-  def get_inits(grid), do: grid |> Enum.filter(fn {_key, value} -> value == 0 end) |> Enum.map(fn {key, _} -> key end)
+  defp get_inits(grid), do: grid |> Enum.filter(fn {_key, value} -> value == 0 end) |> Enum.map(fn {key, _} -> key end)
 
   @spec check_trailhead({non_neg_integer(), non_neg_integer()}, map) :: non_neg_integer()
-  def check_trailhead(coords, grid) do
+  defp check_trailhead(coords, grid) do
     coords
     |> check_vectors([0], [coords], grid)
     |> List.flatten()
@@ -48,7 +50,7 @@ defmodule Ten do
     |> Enum.count()
   end
 
-  def check_trailhead_part_two(coords, grid) do
+  defp check_trailhead_part_two(coords, grid) do
     coords
     |> check_vectors_part_two([0], [coords], grid)
     |> List.flatten()
@@ -56,10 +58,11 @@ defmodule Ten do
   end
 
   @spec check_trail_score(tuple(), tuple(), [non_neg_integer()], [tuple()], map) :: nil | tuple()
-  def check_trail_score({x, y}, {mx, my}, trail, visited, grid) do
+  defp check_trail_score({x, y}, {mx, my}, trail, visited, grid) do
     new_position = {x + mx, y + my}
     value = Map.get(grid, new_position)
     updated_trail = trail ++ [value]
+
     cond do
       is_nil(value) -> nil
       new_position in visited -> nil
@@ -69,10 +72,12 @@ defmodule Ten do
     end
   end
 
-  def check_trail_rating({x, y}, {mx, my}, trail, visited, grid) do
+  @spec check_trail_rating(tuple(), tuple(), [non_neg_integer()], [tuple()], map) :: nil | boolean()
+  defp check_trail_rating({x, y}, {mx, my}, trail, visited, grid) do
     new_position = {x + mx, y + my}
     value = Map.get(grid, new_position)
     updated_trail = trail ++ [value]
+
     cond do
       is_nil(value) -> false
       new_position in visited -> false
@@ -83,15 +88,18 @@ defmodule Ten do
   end
 
   @spec check_vectors({non_neg_integer(), non_neg_integer()}, [non_neg_integer()], [tuple()], map) :: [nil | tuple()]
-  def check_vectors({x, y}, trail, visited, grid) do
+  defp check_vectors({x, y}, trail, visited, grid) do
     for vector <- vectors(), do: check_trail_score({x, y}, vector, trail, visited, grid)
   end
 
-  def check_vectors_part_two({x, y}, trail, visited, grid) do
+  @spec check_vectors_part_two(tuple(), [non_neg_integer()], [tuple()], map) :: [nil | boolean()]
+  defp check_vectors_part_two({x, y}, trail, visited, grid) do
     for vector <- vectors(), do: check_trail_rating({x, y}, vector, trail, visited, grid)
   end
 
-  def vectors, do: [{0, -1}, {1, 0}, {0, 1}, {-1, 0}]
+  @spec vectors :: [{non_neg_integer(), non_neg_integer()}]
+  defp vectors, do: [{0, -1}, {1, 0}, {0, 1}, {-1, 0}]
 
-  def good_trail, do: (for x <- 0..9, do: x)
+  @spec good_trail :: list()
+  defp good_trail, do: for(x <- 0..9, do: x)
 end
